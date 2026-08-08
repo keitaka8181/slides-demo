@@ -1,0 +1,202 @@
+:root {
+  --ink: #161412;
+  --muted: #6b645c;
+  --line: #e3ded5;
+  --paper: #ffffff;
+  --accent: #c0492f; /* 朱 — used sparingly */
+  --stage-w: 1280px;
+  --stage-h: 720px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Full-viewport black field; the white stage floats centered inside it. */
+.viewport {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  overflow: hidden;
+  cursor: default;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+/* Fixed 1280x720 design space, uniformly scaled to fit (contain). */
+.stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* Slides stack; only the active one is visible (crossfade). */
+.slide {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  color: var(--ink);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+  overflow: hidden;
+  font-family: var(--font-body), "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+}
+.slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ---- typography ---- */
+.kicker {
+  font-family: var(--font-body), sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+}
+.display {
+  font-family: var(--font-display), "Hiragino Mincho ProN", "Noto Serif JP", serif;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+.h1 {
+  font-size: 84px;
+}
+.h2 {
+  font-size: 56px;
+}
+.lead {
+  font-size: 26px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin: 0;
+  font-weight: 400;
+}
+.body {
+  font-size: 22px;
+  line-height: 1.85;
+  color: #3a342e;
+  margin: 0;
+  font-weight: 400;
+}
+.rule {
+  width: 64px;
+  height: 3px;
+  background: var(--accent);
+  border: 0;
+  margin: 0;
+}
+
+/* ---- layout helpers ---- */
+.pad {
+  position: absolute;
+  inset: 0;
+  padding: 88px 96px;
+  display: flex;
+  flex-direction: column;
+}
+.center {
+  align-items: flex-start;
+  justify-content: center;
+  gap: 28px;
+}
+.split {
+  display: grid;
+  grid-template-columns: 46% 54%;
+  height: 100%;
+}
+.split .panel {
+  padding: 88px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 26px;
+}
+.figure {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: #f3f1ea;
+}
+.figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.figcap {
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.foot {
+  position: absolute;
+  left: 96px;
+  bottom: 64px;
+  font-size: 16px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+
+/* hero (image on top, text below) */
+.hero {
+  display: grid;
+  grid-template-rows: 58% 42%;
+  height: 100%;
+}
+.hero .panel {
+  padding: 56px 96px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+
+/* ---- staggered reveal on the active slide ---- */
+.slide.is-active .reveal {
+  animation: rise 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.slide.is-active .reveal:nth-child(1) { animation-delay: 0.06s; }
+.slide.is-active .reveal:nth-child(2) { animation-delay: 0.16s; }
+.slide.is-active .reveal:nth-child(3) { animation-delay: 0.26s; }
+.slide.is-active .reveal:nth-child(4) { animation-delay: 0.36s; }
+.slide.is-active .reveal:nth-child(5) { animation-delay: 0.46s; }
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide,
+  .slide.is-active .reveal {
+    transition: none;
+    animation: none;
+  }
+}
